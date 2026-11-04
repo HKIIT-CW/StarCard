@@ -1,0 +1,868 @@
+<!DOCTYPE html>
+<html lang="zh-HK" class="h-full bg-slate-950 text-slate-100">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>VIP 幸運星光刮刮卡 ✦ 今日專屬歌聲</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;600;800;900&family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Noto Sans TC"', '"Outfit"', 'sans-serif'],
+                        outfit: ['"Outfit"', 'sans-serif'],
+                    },
+                    colors: {
+                        gold: {
+                            100: '#fef9c3',
+                            300: '#fde047',
+                            400: '#facc15',
+                            500: '#eab308',
+                            600: '#ca8a04',
+                            700: '#a16207',
+                        }
+                    },
+                    animation: {
+                        'pulse-glow': 'pulseGlow 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'float-card': 'floatCard 4s ease-in-out infinite',
+                        'shine': 'shine 2s linear infinite',
+                    },
+                    keyframes: {
+                        pulseGlow: {
+                            '0%, 100%': { filter: 'drop-shadow(0 0 15px rgba(234, 179, 8, 0.3))' },
+                            '50%': { filter: 'drop-shadow(0 0 30px rgba(234, 179, 8, 0.7))' },
+                        },
+                        floatCard: {
+                            '0%, 100%': { transform: 'translateY(0px)' },
+                            '50%': { transform: 'translateY(-6px)' },
+                        },
+                        shine: {
+                            '0%': { backgroundPosition: '-200% 0' },
+                            '100%': { backgroundPosition: '200% 0' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Modern Luxe Dark Background with subtle ambient radial glow */
+        .luxe-bg {
+            background-color: #07090e;
+            background-image: 
+                radial-gradient(circle at 50% 0%, rgba(202, 138, 4, 0.22) 0%, transparent 55%),
+                radial-gradient(circle at 100% 100%, rgba(147, 51, 234, 0.12) 0%, transparent 50%),
+                radial-gradient(circle at 0% 80%, rgba(234, 179, 8, 0.1) 0%, transparent 45%);
+        }
+
+        /* Golden Metallic Glassmorphic Card Style */
+        .gold-glass {
+            background: rgba(18, 22, 34, 0.75);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(250, 204, 21, 0.35);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), inset 0 1px 1px rgba(255, 255, 255, 0.15);
+        }
+
+        .gold-gradient-text {
+            background: linear-gradient(135deg, #ffffff 0%, #fde047 40%, #ca8a04 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .gold-border-glow {
+            box-shadow: 0 0 20px rgba(234, 179, 8, 0.25);
+        }
+
+        /* Touch interaction polish */
+        #scratchCanvas {
+            touch-action: none;
+            cursor: pointer;
+        }
+
+        /* Particle Overlay Canvas */
+        #confettiCanvas {
+            pointer-events: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 60;
+        }
+
+        /* Custom Scrollbar for Config */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="h-full luxe-bg font-sans flex flex-col justify-between items-center text-slate-100 overflow-x-hidden selection:bg-amber-500 selection:text-black">
+
+    <!-- Celebration Particles -->
+    <canvas id="confettiCanvas"></canvas>
+
+    <!-- Top Navigation Header with HKIIT Logo -->
+    <header class="w-full max-w-md px-5 pt-6 flex justify-between items-center z-20">
+        <div class="flex items-center space-x-2.5">
+            <img src="https://raw.githubusercontent.com/HKIIT-CW/HKIIT_DailyStickDrawer/main/HKIIT_logo_Single_color_horizontal_reverse.png" 
+                 alt="HKIIT Logo" 
+                 class="h-8 w-auto object-contain drop-shadow-md" 
+                 onerror="this.onerror=null; this.src='https://placehold.co/180x45/121622/fde047?text=HKIIT+Logo';" />
+        </div>
+        
+        <div class="flex items-center space-x-2">
+            <!-- Audio Mute/Unmute -->
+            <button id="soundToggleBtn" onclick="toggleSound()" class="w-9 h-9 rounded-xl bg-slate-900/80 border border-amber-500/30 text-amber-300 flex items-center justify-center hover:bg-slate-800 transition active:scale-95 shadow-sm" title="聲音效果">
+                <i id="soundIcon" class="fa-solid fa-volume-high text-xs"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Scratch Area -->
+    <main class="w-full max-w-md flex-1 flex flex-col items-center justify-center px-4 py-4 relative z-10">
+        
+        <!-- Headline / Welcome Header -->
+        <div class="text-center mb-4">
+            <div class="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-300 text-[11px] font-semibold tracking-wider uppercase mb-2">
+                <i class="fa-solid fa-sparkles text-amber-400"></i>
+                <span>NFC Special Souvenir</span>
+            </div>
+            <h1 class="text-2xl font-extrabold gold-gradient-text tracking-wide mb-1">
+                刮出今日幸運星光 ✦
+            </h1>
+            <p class="text-xs text-slate-400 tracking-wider">
+                滑動手指刮開塗層 • 解鎖專屬幸運指數與歌曲
+            </p>
+        </div>
+
+        <!-- SCRATCH CARD CONTAINER (Extended Height for Full Info) -->
+        <div class="relative w-full max-w-sm min-h-[600px] rounded-3xl gold-glass gold-border-glow p-5 flex flex-col justify-between items-center overflow-hidden animate-float-card shadow-2xl my-2">
+            
+            <!-- UNDERLYING REVEALED CONTENT (Visible through scratched canvas areas) -->
+            <div id="cardRevealedContent" class="w-full h-full flex flex-col justify-between items-center text-center opacity-100 transition-opacity duration-300 space-y-3">
+                
+                <!-- Star Rating Badge -->
+                <div class="pt-1">
+                    <div class="text-xs text-amber-400 font-bold tracking-widest uppercase mb-1 flex items-center justify-center space-x-1">
+                        <i class="fa-solid fa-certificate"></i>
+                        <span>今日幸運指數</span>
+                    </div>
+                    <!-- Stars container -->
+                    <div id="starsContainer" class="flex justify-center space-x-1 text-2xl text-amber-400 drop-shadow-[0_0_10px_rgba(250,204,21,0.8)] my-1">
+                        <!-- Rendered by JS -->
+                    </div>
+                </div>
+
+                <!-- Fortune Title & Quote -->
+                <div class="w-full px-1">
+                    <h2 id="cardTitle" class="text-xl font-black text-amber-300 gold-gradient-text mb-2">
+                        【星光熠熠 • 大吉】
+                    </h2>
+                    <p id="cardQuote" class="text-xs text-slate-200 leading-relaxed font-normal bg-slate-900/70 p-3 rounded-2xl border border-amber-500/20 backdrop-blur-sm shadow-inner">
+                        「氣場全開！今日幸運指數直衝雲宵，任何決策皆有如神助。」
+                    </p>
+                </div>
+
+                <!-- Course Recommendation Feature Box (@Chai Wan) - Hidden initially until card is fully scratched -->
+                <div id="courseRecommendBlock" class="w-full bg-slate-950/80 rounded-2xl p-3 border border-amber-500/25 flex flex-col items-center text-left hidden opacity-0 scale-95 transition-all duration-700 ease-out">
+                    <div class="w-full flex items-center justify-between text-[11px] text-amber-400 font-bold uppercase tracking-wider mb-2 border-b border-amber-500/20 pb-1">
+                        <span class="flex items-center space-x-1">
+                            <i class="fa-solid fa-graduation-cap text-amber-300"></i>
+                            <span>柴灣分校 專屬幸運配對課程</span>
+                        </span>
+                        <span class="text-[10px] text-slate-400 font-normal">@Chai Wan</span>
+                    </div>
+
+                    <div id="cardCourseName" class="w-full text-xs font-bold text-amber-200 mb-2.5 flex items-center space-x-1.5 bg-amber-500/10 px-2.5 py-1.5 rounded-lg border border-amber-500/20">
+                        <i class="fa-solid fa-code text-amber-400"></i>
+                        <span>IT114107 Game Software Development</span>
+                    </div>
+
+                    <!-- 4 Main Courses Quick List -->
+                    <div class="w-full grid grid-cols-1 gap-1 text-[10px] text-slate-300">
+                        <div class="flex items-center space-x-1.5"><i class="fa-solid fa-check text-amber-400 text-[9px]"></i><span>IT114107 Game Software Development</span></div>
+                        <div class="flex items-center space-x-1.5"><i class="fa-solid fa-check text-amber-400 text-[9px]"></i><span>IT114122 Cybersecurity</span></div>
+                        <div class="flex items-center space-x-1.5"><i class="fa-solid fa-check text-amber-400 text-[9px]"></i><span>IT114124 AI & Smart Technology</span></div>
+                        <div class="flex items-center space-x-1.5"><i class="fa-solid fa-check text-amber-400 text-[9px]"></i><span>IT114214 Digital Media Technology</span></div>
+                    </div>
+                </div>
+
+                <!-- YouTube Song Recommendation Box -->
+                <div class="w-full bg-gradient-to-br from-slate-900/90 to-slate-950/90 rounded-2xl p-3.5 border border-amber-500/30 flex flex-col items-center shadow-lg">
+                    <div class="flex items-center space-x-1.5 text-[10px] text-red-400 font-bold uppercase tracking-wider mb-1">
+                        <i class="fa-brands fa-youtube text-xs"></i>
+                        <span>靈魂主題曲</span>
+                    </div>
+                    <div id="cardSongTitle" class="font-bold text-sm text-slate-100 mb-0.5 line-clamp-1">
+                        Beyond - 《海闊天空》
+                    </div>
+                    <div id="cardSongDesc" class="text-[11px] text-slate-400 mb-3 line-clamp-1">
+                        「原諒我這一生不羈放縱愛自由」
+                    </div>
+
+                    <!-- Direct YouTube Button -->
+                    <a id="cardYoutubeBtn" href="https://www.youtube.com" target="_blank" rel="noopener noreferrer" onclick="openYoutubeLink(event, this.href)" class="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 text-white font-bold text-xs flex items-center justify-center space-x-2 transition active:scale-95 shadow-md shadow-red-600/30 relative z-30 cursor-pointer">
+                        <i class="fa-solid fa-play text-xs"></i>
+                        <span>點擊進入 YouTube 播放</span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- OVERLAY HTML5 CANVAS SCRATCH LAYER -->
+            <canvas id="scratchCanvas" class="absolute inset-0 w-full h-full z-20 rounded-3xl"></canvas>
+
+            <!-- SCRATCH PROGRESS INDICATOR / PROMPT -->
+            <div id="scratchPrompt" class="absolute bottom-4 left-1/2 -translate-x-1/2 z-30 px-4 py-1.5 rounded-full bg-slate-950/80 border border-amber-500/40 text-[11px] text-amber-300 font-semibold shadow-lg backdrop-blur-md pointer-events-none flex items-center space-x-2">
+                <i class="fa-solid fa-hand-pointer animate-bounce text-amber-400"></i>
+                <span id="progressText">用手指劃開塗層 (0%)</span>
+            </div>
+        </div>
+
+        <!-- Action Control Buttons below Card -->
+        <div class="w-full max-w-sm flex space-x-3 mt-4">
+            <button onclick="shareResult()" class="flex-1 py-3 px-4 rounded-2xl bg-slate-900/90 border border-amber-500/30 text-amber-300 font-bold text-xs flex items-center justify-center space-x-2 hover:bg-slate-800 active:scale-95 transition shadow-lg">
+                <i class="fa-solid fa-share-nodes"></i>
+                <span>分享今日幸運</span>
+            </button>
+            <button onclick="pickNewRandomCard()" class="flex-1 py-3 px-4 rounded-2xl bg-gradient-to-r from-amber-500 via-amber-400 to-amber-600 text-slate-950 font-extrabold text-xs flex items-center justify-center space-x-2 hover:brightness-110 active:scale-95 transition shadow-lg shadow-amber-500/20">
+                <i class="fa-solid fa-rotate-right"></i>
+                <span>換一張刮刮卡</span>
+            </button>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="w-full max-w-md py-4 text-center text-[11px] text-slate-500 z-10 font-outfit tracking-wider">
+        PREMIUM NFC SOUVENIR • VIP EDITION
+    </footer>
+
+
+    <!-- ========================================== -->
+    <!-- HOST CONFIGURATION MODAL (主辦人自訂後台) -->
+    <!-- ========================================== -->
+    <div id="configModal" class="fixed inset-0 bg-black/90 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
+        <div class="relative w-full max-w-md bg-slate-900 border border-amber-500/50 rounded-3xl p-5 text-slate-100 max-h-[85vh] flex flex-col shadow-2xl">
+            <div class="flex justify-between items-center mb-3 pb-3 border-b border-slate-800">
+                <div class="flex items-center space-x-2">
+                    <i class="fa-solid fa-sliders text-amber-400"></i>
+                    <h3 class="font-bold text-base text-amber-300">自訂刮刮卡庫存與歌曲</h3>
+                </div>
+                <button onclick="closeConfigModal()" class="text-slate-400 hover:text-white">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+
+            <p class="text-xs text-slate-400 mb-3">
+                您可以新增或修改刮刮卡內容（星數最高5星）。資料自動儲存於此裝置！
+            </p>
+
+            <!-- Cards List Editor Container -->
+            <div id="cardsEditorList" class="flex-1 overflow-y-auto space-y-3 pr-1 mb-4 no-scrollbar">
+                <!-- Dynamically filled by JS -->
+            </div>
+
+            <div class="flex space-x-2 pt-3 border-t border-slate-800">
+                <button onclick="addNewCardItem()" class="px-3 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-amber-300 text-xs font-bold border border-amber-500/30 flex items-center space-x-1">
+                    <i class="fa-solid fa-plus"></i>
+                    <span>新增卡片</span>
+                </button>
+                <button onclick="resetDefaultCards()" class="px-3 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold">
+                    回復預設
+                </button>
+                <button onclick="saveCustomCards()" class="flex-1 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs shadow-md">
+                    儲存設定
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed bottom-12 left-1/2 -translate-x-1/2 px-4 py-2.5 rounded-full bg-amber-400 text-slate-950 font-bold text-xs shadow-2xl opacity-0 pointer-events-none transition-opacity duration-300 z-50 flex items-center space-x-2">
+        <i class="fa-solid fa-circle-check"></i>
+        <span id="toastText">已複製到剪貼簿！</span>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- JAVASCRIPT LOGIC & CANVAS ENGINE -->
+    <!-- ========================================== -->
+    <script>
+        /* ----------------------------------------------------
+         * 1. DEFAULT SCRATCH CARD DATABASE
+         * ---------------------------------------------------- */
+        const DEFAULT_CARDS = [
+            {
+                id: 1,
+                stars: 5,
+                title: "【星光熠熠 • 極致幸運】",
+                quote: "氣場全開！今日幸運指數直衝雲宵，任何決策與嘗試皆有如神助，勇敢大膽衝刺吧！",
+                courseName: "IT114107 Game Software Development",
+                songTitle: "Beyond - 《海闊天空》",
+                songDesc: "「原諒我這一生不羈放縱愛自由，也會怕有一天會跌倒」",
+                youtubeUrl: "https://www.youtube.com/results?search_query=Beyond+海闊天空+MV"
+            },
+            {
+                id: 2,
+                stars: 5,
+                title: "【鴻運當頭 • 財感爆棚】",
+                quote: "好運連連，驚喜不斷！今日特別容易獲得意想不到的禮物或貴人相助。",
+                courseName: "IT114122 Cybersecurity",
+                songTitle: "陳奕迅 - 《幸福摩天輪》",
+                songDesc: "「追追趕趕高高低低，深呼吸然後與你執手相隨」",
+                youtubeUrl: "https://www.youtube.com/results?search_query=陳奕迅+幸福摩天輪+MV"
+            },
+            {
+                id: 3,
+                stars: 4,
+                title: "【溫柔歲月 • 愜意自在】",
+                quote: "給心靈留一片溫暖淨土，享受身邊小小的幸福，愛與好運正在路上奔向你。",
+                courseName: "IT114124 AI & Smart Technology",
+                songTitle: "Dear Jane - 《銀河修理員》",
+                songDesc: "「祝你在亂流下平安，祝你在惡浪裏悠然」",
+                youtubeUrl: "https://www.youtube.com/results?search_query=Dear+Jane+銀河修理員+MV"
+            },
+            {
+                id: 4,
+                stars: 4,
+                title: "【獨處靈感 • 思考突破】",
+                quote: "適合沉澱思緒的一天。在安靜中尋找獨特靈感，你會發現困惑許久的問題迎刃而解。",
+                courseName: "IT114214 Digital Media Technology",
+                songTitle: "林家謙 - 《一人之境》",
+                songDesc: "「派對裏緊抱感觸跳舞，派對後獨自歸家亦好」",
+                youtubeUrl: "https://www.youtube.com/results?search_query=林家謙+一人之境+MV"
+            },
+            {
+                id: 5,
+                stars: 5,
+                title: "【陽光破雲 • 萬事順意】",
+                quote: "心中若有陽光，無懼任何風雨！今日笑口常開，周遭的人都會被你的能量吸引。",
+                courseName: "IT114107 Game Software Development",
+                songTitle: "周杰倫 - 《晴天》",
+                songDesc: "「刮風這天試過握著妳手，但偏偏雨漸漸大到我看妳不見」",
+                youtubeUrl: "https://www.youtube.com/results?search_query=周杰倫+晴天+MV"
+            },
+            {
+                id: 6,
+                stars: 5,
+                title: "【極智創想 • 未來可期】",
+                quote: "靈感如泉湧！今日科技與智慧靈魂在你身上交匯，隨手一個點子都具備無限潛力。",
+                courseName: "IT114124 AI & Smart Technology",
+                songTitle: "張敬軒 - 《青春常駐》",
+                songDesc: "「叮噹可否不要老 伴我長高」",
+                youtubeUrl: "https://www.youtube.com/results?search_query=張敬軒+青春常駐+MV"
+            },
+            {
+                id: 7,
+                stars: 5,
+                title: "【固若金湯 • 安心順遂】",
+                quote: "穩如泰山！今日你擁有無懈可擊的護航力，無論面對任何挑戰都能安全過關。",
+                courseName: "IT114122 Cybersecurity",
+                songTitle: "MC 張天賦 - 《記憶棉》",
+                songDesc: "「下意識抓緊了被單 遺憾在下半生延續」",
+                youtubeUrl: "https://www.youtube.com/results?search_query=MC張天賦+記憶棉+MV"
+            },
+            {
+                id: 8,
+                stars: 4,
+                title: "【數碼光影 • 創意無限】",
+                quote: "視覺與美感的盛宴！今日你的審美力與創造力達到頂峰，適合打造令人驚艷的作品。",
+                courseName: "IT114214 Digital Media Technology",
+                songTitle: "G.E.M. 鄧紫棋 - 《光年之外》",
+                songDesc: "「我能想到最浪漫的事 就是和你一起慢慢變老」",
+                youtubeUrl: "https://www.youtube.com/results?search_query=鄧紫棋+光年之外+MV"
+            },
+            {
+                id: 9,
+                stars: 5,
+                title: "【破關斬將 • 勇往直前】",
+                quote: "關關難過關關過！你的毅力與熱情正如高階玩家般強大，今日注定要拿下最高得分！",
+                courseName: "IT114107 Game Software Development",
+                songTitle: "容祖兒 - 《痛愛》",
+                songDesc: "「喜歡你等於喜歡勇敢，不畏懼流言」",
+                youtubeUrl: "https://www.youtube.com/results?search_query=容祖兒+痛愛+MV"
+            },
+            {
+                id: 10,
+                stars: 5,
+                title: "【全能大吉 • 圓滿順心】",
+                quote: "五星大滿貫！今日所有幸運因子匯聚在你身邊，無論事業、學習還是生活皆大歡喜！",
+                courseName: "IT114124 AI & Smart Technology",
+                songTitle: "古巨基 - 《勁歌金曲》",
+                songDesc: "「聽得見的精彩，感受得到的歡樂」",
+                youtubeUrl: "https://www.youtube.com/results?search_query=古巨基+勁歌金曲+MV"
+            }
+        ];
+
+        // App States
+        let cardsPool = [];
+        let currentCard = null;
+        let isScratchedComplete = false;
+        let soundEnabled = true;
+        let audioCtx = null;
+
+        // Canvas Scratch Engine Variables
+        let canvas, ctx;
+        let isDrawing = false;
+        let scratchedPixelsPercentage = 0;
+        let lastScratchSoundTime = 0;
+
+        window.addEventListener('DOMContentLoaded', () => {
+            loadCardsFromStorage();
+            initWebAudio();
+            initCanvasScratch();
+            pickNewRandomCard();
+        });
+
+        /* ----------------------------------------------------
+         * 2. AUDIO SYNTHESIZER (Scratch sound & Victory sound)
+         * ---------------------------------------------------- */
+        function initWebAudio() {
+            try {
+                const AudioContext = window.AudioContext || window.webkitAudioContext;
+                if (AudioContext) audioCtx = new AudioContext();
+            } catch(e) {}
+        }
+
+        function playScratchSound() {
+            if (!soundEnabled || !audioCtx) return;
+            const now = Date.now();
+            if (now - lastScratchSoundTime < 60) return; // Debounce audio clicks
+            lastScratchSoundTime = now;
+
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+
+            // Synthesize metallic scratching noise
+            const bufferSize = audioCtx.sampleRate * 0.04;
+            const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+            const data = buffer.getChannelData(0);
+            for (let i = 0; i < bufferSize; i++) {
+                data[i] = Math.random() * 2 - 1;
+            }
+
+            const noise = audioCtx.createBufferSource();
+            noise.buffer = buffer;
+
+            const filter = audioCtx.createBiquadFilter();
+            filter.type = 'bandpass';
+            filter.frequency.value = 1800 + Math.random() * 800;
+
+            const gain = audioCtx.createGain();
+            gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.04);
+
+            noise.connect(filter);
+            filter.connect(gain);
+            gain.connect(audioCtx.destination);
+
+            noise.start();
+        }
+
+        function playVictoryChime() {
+            if (!soundEnabled || !audioCtx) return;
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+
+            const notes = [523.25, 659.25, 783.99, 1046.50, 1318.51]; // C5, E5, G5, C6, E6
+            notes.forEach((freq, idx) => {
+                setTimeout(() => {
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+                    gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.5);
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + 0.55);
+                }, idx * 90);
+            });
+        }
+
+        function toggleSound() {
+            soundEnabled = !soundEnabled;
+            const icon = document.getElementById('soundIcon');
+            if (soundEnabled) {
+                icon.className = "fa-solid fa-volume-high text-xs";
+                showToast("音效已開啟 🔊");
+            } else {
+                icon.className = "fa-solid fa-volume-xmark text-xs text-slate-500";
+                showToast("音效已靜音 🔇");
+            }
+        }
+
+        /* ----------------------------------------------------
+         * 3. HTML5 CANVAS SCRATCH ENGINE
+         * ---------------------------------------------------- */
+        function initCanvasScratch() {
+            canvas = document.getElementById('scratchCanvas');
+            ctx = canvas.getContext('2d', { willReadFrequently: true });
+
+            // Fit canvas size to parent container
+            resizeCanvas();
+            window.addEventListener('resize', resizeCanvas);
+
+            // Pointer Event Listeners (Mouse & Touch)
+            canvas.addEventListener('mousedown', startScratching);
+            canvas.addEventListener('touchstart', startScratching, { passive: false });
+
+            window.addEventListener('mousemove', scratchMove);
+            window.addEventListener('touchmove', scratchMove, { passive: false });
+
+            window.addEventListener('mouseup', stopScratching);
+            window.addEventListener('touchend', stopScratching);
+        }
+
+        function resizeCanvas() {
+            const rect = canvas.getBoundingClientRect();
+            canvas.width = rect.width;
+            canvas.height = rect.height;
+            drawGoldFoilOverlay();
+        }
+
+        function drawGoldFoilOverlay() {
+            if (!canvas) return;
+            ctx.globalCompositeOperation = 'source-over';
+
+            // Metallic Gold & Silver Brushed Gradient
+            const grad = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+            grad.addColorStop(0, '#ca8a04');
+            grad.addColorStop(0.3, '#fde047');
+            grad.addColorStop(0.5, '#a16207');
+            grad.addColorStop(0.7, '#fef9c3');
+            grad.addColorStop(1, '#854d0e');
+
+            ctx.fillStyle = grad;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Add Brushed Texture Lines
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.08)';
+            for (let i = 0; i < canvas.height; i += 4) {
+                ctx.fillRect(0, i, canvas.width, 1.5);
+            }
+
+            // Decorative Gold Foil Text on Top of Scratch Area
+            ctx.fillStyle = '#451a03';
+            ctx.font = '900 16px "Noto Sans TC", sans-serif';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('✨ 刮開專屬幸運星光 ✨', canvas.width / 2, canvas.height / 2 - 12);
+
+            ctx.fillStyle = '#78350f';
+            ctx.font = '600 11px sans-serif';
+            ctx.fillText('VIP SCRATCH CARD', canvas.width / 2, canvas.height / 2 + 16);
+        }
+
+        function startScratching(e) {
+            if (isScratchedComplete) return;
+            e.preventDefault();
+            isDrawing = true;
+            scratchAtPoint(e);
+        }
+
+        function scratchMove(e) {
+            if (!isDrawing || isScratchedComplete) return;
+            e.preventDefault();
+            scratchAtPoint(e);
+        }
+
+        function stopScratching() {
+            if (!isDrawing) return;
+            isDrawing = false;
+            checkScratchedPercentage();
+        }
+
+        function scratchAtPoint(e) {
+            const rect = canvas.getBoundingClientRect();
+            let clientX, clientY;
+
+            if (e.touches && e.touches.length > 0) {
+                clientX = e.touches[0].clientX;
+                clientY = e.touches[0].clientY;
+            } else {
+                clientX = e.clientX;
+                clientY = e.clientY;
+            }
+
+            const x = clientX - rect.left;
+            const y = clientY - rect.top;
+
+            // Clear Circle (Erase scratch layer)
+            ctx.globalCompositeOperation = 'destination-out';
+            ctx.beginPath();
+            ctx.arc(x, y, 22, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Sound & Haptic Vibration
+            playScratchSound();
+            if ("vibrate" in navigator && Math.random() > 0.6) {
+                navigator.vibrate(15);
+            }
+
+            // Periodically check percentage during dragging
+            if (Math.random() > 0.7) {
+                checkScratchedPercentage();
+            }
+        }
+
+        function checkScratchedPercentage() {
+            if (isScratchedComplete) return;
+
+            const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            const pixels = imageData.data;
+            let transparentPixels = 0;
+
+            // Sample every 16th pixel for high performance
+            for (let i = 3; i < pixels.length; i += 16) {
+                if (pixels[i] === 0) {
+                    transparentPixels++;
+                }
+            }
+
+            const totalSampledPixels = pixels.length / 16;
+            scratchedPixelsPercentage = Math.round((transparentPixels / totalSampledPixels) * 100);
+
+            // Update status text
+            document.getElementById('progressText').textContent = `已刮開 ${Math.min(100, scratchedPixelsPercentage)}%`;
+
+            // If >= 15% cleared, automatically unveil full card!
+            if (scratchedPixelsPercentage >= 15) {
+                revealFullCard();
+            }
+        }
+
+        function revealFullCard() {
+            isScratchedComplete = true;
+
+            // Fade out Canvas completely & allow clicks to pass through to underlying card
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            canvas.classList.add('pointer-events-none');
+            document.getElementById('scratchPrompt').classList.add('opacity-0', 'pointer-events-none');
+
+            // Show underlying revealed card with fade-in
+            const cardContent = document.getElementById('cardRevealedContent');
+            if (cardContent) cardContent.classList.remove('opacity-0');
+
+            // Dynamically reveal the matched course recommendation block with pop animation after scratch completion
+            const courseBlock = document.getElementById('courseRecommendBlock');
+            if (courseBlock) {
+                courseBlock.classList.remove('hidden');
+                setTimeout(() => {
+                    courseBlock.classList.remove('opacity-0', 'scale-95');
+                    courseBlock.classList.add('opacity-100', 'scale-100');
+                }, 50);
+            }
+
+            // Celebration VFX & Sound
+            playVictoryChime();
+            triggerConfetti();
+
+            if ("vibrate" in navigator) {
+                navigator.vibrate([100, 50, 150]);
+            }
+        }
+
+        /* ----------------------------------------------------
+         * 4. CARD DATA POPULATION & LOGIC
+         * ---------------------------------------------------- */
+        function pickNewRandomCard() {
+            isScratchedComplete = false;
+            
+            // Re-enable canvas pointer events for scratching
+            if (canvas) {
+                canvas.classList.remove('pointer-events-none');
+            }
+
+            // Reset Course Block visibility for new scratch
+            const courseBlock = document.getElementById('courseRecommendBlock');
+            if (courseBlock) {
+                courseBlock.classList.add('hidden', 'opacity-0', 'scale-95');
+                courseBlock.classList.remove('opacity-100', 'scale-100');
+            }
+
+            // Choose random card from pool
+            const randomIndex = Math.floor(Math.random() * cardsPool.length);
+            currentCard = cardsPool[randomIndex];
+
+            // Render Stars
+            const starsContainer = document.getElementById('starsContainer');
+            if (starsContainer) {
+                starsContainer.innerHTML = '';
+                for (let i = 1; i <= 5; i++) {
+                    if (i <= currentCard.stars) {
+                        starsContainer.innerHTML += `<i class="fa-solid fa-star"></i>`;
+                    } else {
+                        starsContainer.innerHTML += `<i class="fa-regular fa-star text-slate-700"></i>`;
+                    }
+                }
+            }
+
+            // Fill details safely with defensive checks
+            const cardTitleEl = document.getElementById('cardTitle');
+            if (cardTitleEl) cardTitleEl.textContent = currentCard.title;
+
+            const cardQuoteEl = document.getElementById('cardQuote');
+            if (cardQuoteEl) cardQuoteEl.textContent = `「${currentCard.quote}」`;
+
+            const cardCourseNameEl = document.getElementById('cardCourseName');
+            if (cardCourseNameEl) {
+                const cName = currentCard.courseName || "IT114107 Game Software Development";
+                cardCourseNameEl.innerHTML = `<i class="fa-solid fa-code text-amber-400"></i><span>${cName}</span>`;
+            }
+
+            const cardSongTitleEl = document.getElementById('cardSongTitle');
+            if (cardSongTitleEl) cardSongTitleEl.textContent = currentCard.songTitle;
+
+            const cardSongDescEl = document.getElementById('cardSongDesc');
+            if (cardSongDescEl) cardSongDescEl.textContent = currentCard.songDesc;
+
+            const cardYoutubeBtnEl = document.getElementById('cardYoutubeBtn');
+            if (cardYoutubeBtnEl) cardYoutubeBtnEl.href = currentCard.youtubeUrl;
+
+            // Reset Card Visibility
+            const cardRevealedContentEl = document.getElementById('cardRevealedContent');
+            if (cardRevealedContentEl) {
+                cardRevealedContentEl.classList.remove('opacity-0');
+                cardRevealedContentEl.classList.add('opacity-100');
+            }
+
+            const scratchPromptEl = document.getElementById('scratchPrompt');
+            if (scratchPromptEl) {
+                scratchPromptEl.classList.remove('opacity-0', 'pointer-events-none');
+            }
+
+            const progressTextEl = document.getElementById('progressText');
+            if (progressTextEl) {
+                progressTextEl.textContent = '用手指劃開塗層 (0%)';
+            }
+
+            drawGoldFoilOverlay();
+        }
+
+        function openYoutubeLink(e, url) {
+            if (e) e.stopPropagation();
+            if (url && url !== '#') {
+                window.open(url, '_blank');
+            }
+        }
+
+        /* ----------------------------------------------------
+         * 5. CONFETTI CELEBRATION PARTICLES
+         * ---------------------------------------------------- */
+        function triggerConfetti() {
+            const canvasC = document.getElementById('confettiCanvas');
+            const ctxC = canvasC.getContext('2d');
+            canvasC.width = window.innerWidth;
+            canvasC.height = window.innerHeight;
+
+            const particles = [];
+            const colors = ['#fde047', '#eab308', '#ca8a04', '#ffffff', '#ef4444', '#a855f7'];
+
+            for (let i = 0; i < 80; i++) {
+                particles.push({
+                    x: canvasC.width / 2,
+                    y: canvasC.height / 2,
+                    vx: (Math.random() - 0.5) * 14,
+                    vy: (Math.random() - 0.8) * 16,
+                    size: Math.random() * 7 + 4,
+                    color: colors[Math.floor(Math.random() * colors.length)],
+                    alpha: 1,
+                    rotation: Math.random() * 360,
+                    spin: (Math.random() - 0.5) * 12
+                });
+            }
+
+            function render() {
+                ctxC.clearRect(0, 0, canvasC.width, canvasC.height);
+                let alive = false;
+
+                particles.forEach(p => {
+                    p.x += p.vx;
+                    p.y += p.vy;
+                    p.vy += 0.35; // Gravity
+                    p.alpha -= 0.015;
+                    p.rotation += p.spin;
+
+                    if (p.alpha > 0) {
+                        alive = true;
+                        ctxC.save();
+                        ctxC.translate(p.x, p.y);
+                        ctxC.rotate((p.rotation * Math.PI) / 180);
+                        ctxC.globalAlpha = Math.max(0, p.alpha);
+                        ctxC.fillStyle = p.color;
+                        ctxC.fillRect(-p.size / 2, -p.size / 2, p.size, p.size);
+                        ctxC.restore();
+                    }
+                });
+
+                if (alive) {
+                    requestAnimationFrame(render);
+                } else {
+                    ctxC.clearRect(0, 0, canvasC.width, canvasC.height);
+                }
+            }
+            render();
+        }
+
+        /* ----------------------------------------------------
+         * 6. SHARE & UTILS
+         * ---------------------------------------------------- */
+        function shareResult() {
+            if (!currentCard) return;
+
+            const starsTxt = "★".repeat(currentCard.stars) + "☆".repeat(5 - currentCard.stars);
+            const shareText = `✨ 我刮出了 VIP 幸運指數：[${starsTxt}]\n${currentCard.title}\n\n「${currentCard.quote}」\n\n🎵 今日專屬主題曲：${currentCard.songTitle}\n👉 點擊收聽：${currentCard.youtubeUrl}`;
+
+            if (navigator.share) {
+                navigator.share({
+                    title: 'VIP 幸運刮刮卡',
+                    text: shareText,
+                    url: window.location.href
+                }).catch(() => copyToClipboard(shareText));
+            } else {
+                copyToClipboard(shareText);
+            }
+        }
+
+        function copyToClipboard(text) {
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            textarea.style.position = 'fixed';
+            textarea.style.opacity = '0';
+            document.body.appendChild(textarea);
+            textarea.select();
+            try {
+                document.execCommand('copy');
+                showToast("結果已複製到剪貼簿！📋");
+            } catch (err) {
+                showToast("複製失敗，請手動複製");
+            }
+            document.body.removeChild(textarea);
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toastText').textContent = msg;
+            toast.classList.remove('opacity-0', 'pointer-events-none');
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'pointer-events-none');
+            }, 2500);
+        }
+
+        /* ----------------------------------------------------
+         * 7. HOST CONFIGURATION STORAGE & EDITING
+         * ---------------------------------------------------- */
+        function loadCardsFromStorage() {
+            cardsPool = [...DEFAULT_CARDS];
+        }
+    </script>
+</body>
+</html>
