@@ -110,21 +110,21 @@
     <!-- Celebration Particles -->
     <canvas id="confettiCanvas"></canvas>
 
-    <!-- Top Navigation Header with HKIIT Logo -->
-    <header class="w-full max-w-md px-5 pt-6 flex justify-between items-center z-20">
-        <div class="flex items-center space-x-2.5">
-            <img src="https://raw.githubusercontent.com/HKIIT-CW/HKIIT_DailyStickDrawer/main/HKIIT_logo_Single_color_horizontal_reverse.png" 
-                 alt="HKIIT Logo" 
-                 class="h-8 w-auto object-contain drop-shadow-md" 
-                 onerror="this.onerror=null; this.src='https://placehold.co/180x45/121622/fde047?text=HKIIT+Logo';" />
-        </div>
-        
-        <div class="flex items-center space-x-2">
-            <!-- Audio Mute/Unmute -->
-            <button id="soundToggleBtn" onclick="toggleSound()" class="w-9 h-9 rounded-xl bg-slate-900/80 border border-amber-500/30 text-amber-300 flex items-center justify-center hover:bg-slate-800 transition active:scale-95 shadow-sm" title="聲音效果">
-                <i id="soundIcon" class="fa-solid fa-volume-high text-xs"></i>
-            </button>
-        </div>
+    <!-- Top Navigation Header (Table Layout with HKIIT Logo) -->
+    <header class="w-full max-w-md px-5 pt-6 z-20">
+        <table class="w-full border-collapse">
+            <tr>
+                <td class="align-middle text-left">
+                    <img src="https://raw.githubusercontent.com/HKIIT-CW/HKIIT_DailyStickDrawer/main/HKIIT_logo_Single_color_horizontal_reverse.png" alt="HKIIT Logo" class="h-12 w-auto object-contain inline-block drop-shadow-md" onerror="this.onerror=null; this.src='https://placehold.co/160x40/000000/ffffff?text=HKIIT';">
+                </td>
+                <td class="align-middle text-right">
+                    <!-- Audio Mute/Unmute -->
+                    <button id="soundToggleBtn" onclick="toggleSound()" class="w-9 h-9 rounded-xl bg-slate-900/80 border border-amber-500/30 text-amber-300 flex items-center justify-center hover:bg-slate-800 transition active:scale-95 shadow-sm" title="聲音效果">
+                        <i id="soundIcon" class="fa-solid fa-volume-high text-xs"></i>
+                    </button>
+                </td>
+            </tr>
+        </table>
     </header>
 
     <!-- Main Scratch Area -->
@@ -522,10 +522,23 @@
         }
 
         function resizeCanvas() {
+            if (!canvas) return;
             const rect = canvas.getBoundingClientRect();
+
+            // 避免手機上下滑動（網址列隱藏/出現）觸發微小 Resize 導致不必要的畫布重繪
+            if (Math.abs(canvas.width - rect.width) < 2 && Math.abs(canvas.height - rect.height) < 2) {
+                return;
+            }
+
             canvas.width = rect.width;
             canvas.height = rect.height;
-            drawGoldFoilOverlay();
+
+            // 若已經刮開完成，Resize 時只做清除，不重新繪製金色塗層
+            if (isScratchedComplete) {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+            } else {
+                drawGoldFoilOverlay();
+            }
         }
 
         function drawGoldFoilOverlay() {
