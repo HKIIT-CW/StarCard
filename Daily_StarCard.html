@@ -34,7 +34,6 @@
                     animation: {
                         'pulse-glow': 'pulseGlow 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
                         'float-card': 'floatCard 4s ease-in-out infinite',
-                        'shine': 'shine 2s linear infinite',
                     },
                     keyframes: {
                         pulseGlow: {
@@ -44,10 +43,6 @@
                         floatCard: {
                             '0%, 100%': { transform: 'translateY(0px)' },
                             '50%': { transform: 'translateY(-6px)' },
-                        },
-                        shine: {
-                            '0%': { backgroundPosition: '-200% 0' },
-                            '100%': { backgroundPosition: '200% 0' },
                         }
                     }
                 }
@@ -55,6 +50,7 @@
         }
     </script>
     <style>
+        /* Ambient luxe radial glow background */
         .luxe-bg {
             background-color: #07090e;
             background-image: 
@@ -63,8 +59,9 @@
                 radial-gradient(circle at 0% 80%, rgba(234, 179, 8, 0.1) 0%, transparent 45%);
         }
 
+        /* Golden Glassmorphism card container */
         .gold-glass {
-            background: rgba(18, 22, 34, 0.75);
+            background: rgba(18, 22, 34, 0.78);
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
             border: 1px solid rgba(250, 204, 21, 0.35);
@@ -81,11 +78,13 @@
             box-shadow: 0 0 20px rgba(234, 179, 8, 0.25);
         }
 
+        /* Touch interaction polish */
         #scratchCanvas {
             touch-action: none;
             cursor: pointer;
         }
 
+        /* Particle Overlay Canvas */
         #confettiCanvas {
             pointer-events: none;
             position: fixed;
@@ -95,9 +94,6 @@
             height: 100%;
             z-index: 60;
         }
-
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
 </head>
 <body class="h-full luxe-bg font-sans flex flex-col justify-between items-center text-slate-100 overflow-x-hidden selection:bg-amber-500 selection:text-black">
@@ -105,15 +101,13 @@
     <!-- Celebration Particles -->
     <canvas id="confettiCanvas"></canvas>
 
-    <!-- Top Navigation Header with GitHub HKIIT Logo -->
+    <!-- Top Navigation Header with GitHub HKIIT White Logo -->
     <header class="w-full max-w-md px-5 pt-6 flex justify-between items-center z-20">
         <div class="flex items-center space-x-2">
-            <!-- HKIIT White Logo direct Image link -->
             <img id="hkiitLogoImg" src="https://raw.githubusercontent.com/HKIIT-CW/HKIIT_DailyStickDrawer/main/HKIIT_logo_Single_color_horizontal_reverse.png" alt="HKIIT Logo" class="h-12 w-auto object-contain" onerror="this.onerror=null; this.src='https://raw.githubusercontent.com/HKIIT-CW/HKIIT_DailyStickDrawer/refs/heads/main/HKIIT_logo_Single_color_horizontal_reverse.png';">
         </div>
         
         <div class="flex items-center space-x-2">
-            <!-- Audio Mute/Unmute -->
             <button id="soundToggleBtn" onclick="toggleSound()" class="w-9 h-9 rounded-xl bg-slate-900/80 border border-amber-500/30 text-amber-300 flex items-center justify-center hover:bg-slate-800 transition active:scale-95 shadow-sm" title="聲音效果">
                 <i id="soundIcon" class="fa-solid fa-volume-high text-xs"></i>
             </button>
@@ -121,59 +115,57 @@
     </header>
 
     <!-- Main Scratch Area -->
-    <main class="w-full max-w-md flex-1 flex flex-col items-center justify-center px-4 py-4 relative z-10">
+    <main class="w-full max-w-md flex-1 flex flex-col items-center justify-center px-4 py-3 relative z-10">
         
-        <!-- Headline / Welcome Header -->
-        <div class="text-center mb-4">
-            <div class="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-300 text-[11px] font-semibold tracking-wider uppercase mb-1.5">
+        <!-- Header Label & Title -->
+        <div class="text-center mb-3">
+            <div class="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-300 text-[13px] font-semibold tracking-wider uppercase mb-1.5">
                 <i class="fa-solid fa-sparkles text-amber-400"></i>
-                <span>NFC Special Souvenir • Chai Wan</span>
+                <span>Special Souvenir at Chai Wan</span>
             </div>
             <h1 class="text-2xl font-extrabold gold-gradient-text tracking-wide mb-1">
                 刮出今日幸運星光 ✦
             </h1>
-            <p class="text-xs text-slate-400 tracking-wider">
-                滑動手指劃開塗層 • 解鎖專屬幸運指數與歌曲
-            </p>
         </div>
 
-        <!-- SCRATCH CARD CONTAINER (Extended Height) -->
-        <div class="relative w-full max-w-sm min-h-[600px] rounded-3xl gold-glass gold-border-glow p-5 flex flex-col justify-between items-center overflow-hidden animate-float-card shadow-2xl">
+        <!-- SCRATCH CARD CONTAINER (Reserves layout flow so middle block stays perfectly centered) -->
+        <div class="relative w-full max-w-sm min-h-[580px] rounded-3xl gold-glass gold-border-glow p-5 flex flex-col justify-between items-center overflow-hidden animate-float-card shadow-2xl">
             
             <!-- UNDERLYING REVEALED CONTENT -->
-            <div id="cardRevealedContent" class="w-full h-full flex flex-col justify-between items-center text-center opacity-100 transition-opacity duration-300">
+            <div id="cardRevealedContent" class="w-full h-full flex flex-col justify-between items-center text-center opacity-100 space-y-2">
                 
-                <!-- POSITION 1: 柴灣分校 專屬幸運配對課程 (Hidden until scratch complete) -->
-                <div id="courseBlock" class="w-full bg-gradient-to-r from-amber-500/20 via-amber-400/30 to-amber-500/20 border border-amber-400/50 rounded-2xl p-3 shadow-md transform transition-all duration-500 hidden scale-95 opacity-0">
-                    <div class="text-[10px] text-amber-300 font-bold tracking-widest uppercase mb-1 flex items-center justify-center space-x-1">
+                <!-- POSITION 1: 柴灣分校 專屬幸運配對課程 -->
+                <div id="courseBlock" class="w-full bg-gradient-to-r from-amber-500/20 via-amber-400/30 to-amber-500/20 border border-amber-400/50 rounded-2xl p-2.5 shadow-md transform transition-all duration-500 opacity-0 scale-95 pointer-events-none">
+                    <div class="text-[14px] text-amber-300 font-bold tracking-widest uppercase mb-0.5 flex items-center justify-center space-x-1">
                         <i class="fa-solid fa-graduation-cap text-amber-400"></i>
                         <span>柴灣分校 專屬幸運配對課程</span>
                     </div>
-                    <div id="cardCourseName" class="font-black text-sm text-amber-100 tracking-wide">
+                    <div id="cardCourseName" class="font-black text-[15px] text-amber-100 tracking-wide">
                         IT114107 Game Software Development
                     </div>
                 </div>
 
-                <!-- POSITION 2: 今日幸運指數 & 幸運短句 -->
-                <div class="my-auto py-2 px-1 w-full">
-                    <div class="text-xs text-amber-400 font-bold tracking-widest uppercase mb-1 flex items-center justify-center space-x-1">
+                <!-- POSITION 2: 今日幸運指數 & 幸運短句 (Visible through central scratch marks) -->
+                <div id="luckBlock" class="my-auto py-2 px-1 w-full">
+                    <div class="text-[14px] text-amber-400 font-bold tracking-widest uppercase mb-1 flex items-center justify-center space-x-1">
                         <i class="fa-solid fa-certificate"></i>
                         <span>今日幸運指數</span>
                     </div>
+                    
                     <!-- Stars container -->
-                    <div id="starsContainer" class="flex justify-center space-x-1 text-2xl text-amber-400 drop-shadow-[0_0_10px_rgba(250,204,21,0.8)] my-1">
+                    <div id="starsContainer" class="flex justify-center space-x-1 text-2xl text-amber-400 drop-shadow-[0_0_12px_rgba(250,204,21,0.9)] my-1">
                     </div>
 
-                    <h2 id="cardTitle" class="text-lg font-black text-amber-300 gold-gradient-text my-2">
+                    <h2 id="cardTitle" class="text-lg font-black text-amber-300 gold-gradient-text my-1.5">
                         【星光熠熠 • 大吉】
                     </h2>
-                    <p id="cardQuote" class="text-xs text-slate-200 leading-relaxed font-normal bg-slate-900/70 p-3 rounded-2xl border border-amber-500/20 backdrop-blur-sm shadow-inner">
+                    <p id="cardQuote" class="text-[14px] text-slate-200 leading-relaxed font-normal bg-slate-900/70 p-3 rounded-2xl border border-amber-500/20 backdrop-blur-sm shadow-inner w-full">
                         「氣場全開！今日幸運指數直衝雲宵，任何決策皆有如神助。」
                     </p>
                 </div>
 
                 <!-- POSITION 3: 靈魂主題曲 YouTube 播放區 -->
-                <div class="w-full bg-gradient-to-br from-slate-900/90 to-slate-950/90 rounded-2xl p-3.5 border border-amber-500/30 flex flex-col items-center shadow-lg">
+                <div id="youtubeBlock" class="w-full bg-gradient-to-br from-slate-900/90 to-slate-950/90 rounded-2xl p-3 border border-amber-500/30 flex flex-col items-center shadow-lg transform transition-all duration-500 opacity-0 scale-95 pointer-events-none">
                     <div class="flex items-center space-x-1.5 text-[10px] text-red-400 font-bold uppercase tracking-wider mb-1">
                         <i class="fa-brands fa-youtube text-xs"></i>
                         <span>靈魂主題曲</span>
@@ -195,14 +187,14 @@
             <!-- OVERLAY HTML5 CANVAS SCRATCH LAYER -->
             <canvas id="scratchCanvas" class="absolute inset-0 w-full h-full z-20 rounded-3xl"></canvas>
 
-            <!-- SCRATCH PROGRESS INDICATOR / PROMPT -->
+            <!-- SCRATCH PROGRESS INDICATOR -->
             <div id="scratchPrompt" class="absolute bottom-4 left-1/2 -translate-x-1/2 z-30 px-4 py-1.5 rounded-full bg-slate-950/80 border border-amber-500/40 text-[11px] text-amber-300 font-semibold shadow-lg backdrop-blur-md pointer-events-none flex items-center space-x-2">
                 <i class="fa-solid fa-hand-pointer animate-bounce text-amber-400"></i>
                 <span id="progressText">用手指劃開塗層 (0%)</span>
             </div>
         </div>
 
-        <!-- Action Control Buttons below Card -->
+        <!-- Action Control Buttons -->
         <div class="w-full max-w-xs flex space-x-3 mt-4">
             <button onclick="shareResult()" class="flex-1 py-3 px-4 rounded-2xl bg-slate-900/90 border border-amber-500/30 text-amber-300 font-bold text-xs flex items-center justify-center space-x-2 hover:bg-slate-800 active:scale-95 transition shadow-lg">
                 <i class="fa-solid fa-share-nodes"></i>
@@ -217,7 +209,7 @@
     </main>
 
     <!-- Footer -->
-    <footer class="w-full max-w-md py-4 text-center text-[11px] text-slate-500 z-10 font-outfit tracking-wider">
+    <footer class="w-full max-w-md py-3 text-center text-[11px] text-slate-500 z-10 font-outfit tracking-wider">
         HKIIT CHAI WAN • NFC SOUVENIR
     </footer>
 
@@ -356,37 +348,64 @@
             } catch(e) {}
         }
 
-        function playScratchSound() {
+        /* Authentic Paper Scratching Sound (刮紙聲) Generator */
+        function playScratchSound(xPosRatio = 0.5) {
             if (!soundEnabled || !audioCtx) return;
             const now = Date.now();
-            if (now - lastScratchSoundTime < 60) return;
+            if (now - lastScratchSoundTime < 45) return;
             lastScratchSoundTime = now;
 
-            if (audioCtx.state === 'suspended') audioCtx.resume();
-
-            const bufferSize = audioCtx.sampleRate * 0.04;
-            const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
-            const data = buffer.getChannelData(0);
-            for (let i = 0; i < bufferSize; i++) {
-                data[i] = Math.random() * 2 - 1;
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
             }
 
-            const noise = audioCtx.createBufferSource();
-            noise.buffer = buffer;
+            try {
+                const duration = 0.045; // seconds per scratch hit
+                const bufferSize = Math.floor(audioCtx.sampleRate * duration);
+                const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+                const data = buffer.getChannelData(0);
 
-            const filter = audioCtx.createBiquadFilter();
-            filter.type = 'bandpass';
-            filter.frequency.value = 1800 + Math.random() * 800;
+                // Synthesize paper scrape noise with subtle micro friction impulses
+                for (let i = 0; i < bufferSize; i++) {
+                    let white = Math.random() * 2 - 1;
+                    if (Math.random() < 0.12) {
+                        white *= 1.8; // Granular paper texture impulse
+                    }
+                    data[i] = white;
+                }
 
-            const gain = audioCtx.createGain();
-            gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
-            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.04);
+                const noise = audioCtx.createBufferSource();
+                noise.buffer = buffer;
 
-            noise.connect(filter);
-            filter.connect(gain);
-            gain.connect(audioCtx.destination);
+                // Bandpass filter centered around 3.8kHz - 5.0kHz for authentic paper scraping sound
+                const filter = audioCtx.createBiquadFilter();
+                filter.type = 'bandpass';
+                filter.frequency.setValueAtTime(3800 + Math.random() * 1200, audioCtx.currentTime);
+                filter.Q.setValueAtTime(1.8 + Math.random() * 0.8, audioCtx.currentTime);
 
-            noise.start();
+                const gain = audioCtx.createGain();
+                gain.gain.setValueAtTime(0.18, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.005, audioCtx.currentTime + duration);
+
+                // Dynamic stereo panning mapped to touch X location
+                let panner = null;
+                if (typeof audioCtx.createStereoPanner === 'function') {
+                    panner = audioCtx.createStereoPanner();
+                    const panVal = Math.max(-1, Math.min(1, (xPosRatio * 2) - 1));
+                    panner.pan.setValueAtTime(panVal, audioCtx.currentTime);
+                }
+
+                noise.connect(filter);
+                if (panner) {
+                    filter.connect(panner);
+                    panner.connect(gain);
+                } else {
+                    filter.connect(gain);
+                }
+                gain.connect(audioCtx.destination);
+
+                noise.start();
+            } catch(e) {}
         }
 
         function playVictoryChime() {
@@ -439,14 +458,13 @@
             window.addEventListener('touchend', stopScratching);
         }
 
-        /* Fixed resize logic for Mobile scrolling address bar */
+        /* Mobile address bar scroll fix logic */
         function resizeCanvas() {
             if (!canvas) return;
             const rect = canvas.getBoundingClientRect();
             const newWidth = Math.round(rect.width);
             const newHeight = Math.round(rect.height);
 
-            // Only update sizes if they genuinely changed
             if (canvas.width !== newWidth || canvas.height !== newHeight) {
                 canvas.width = newWidth;
                 canvas.height = newHeight;
@@ -479,11 +497,12 @@
                 ctx.fillRect(0, i, canvas.width, 1.5);
             }
 
+            // Scratch overlay surface text
             ctx.fillStyle = '#451a03';
             ctx.font = '900 16px "Noto Sans TC", sans-serif';
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
-            ctx.fillText('✨ 刮開專屬幸運星光 ✨', canvas.width / 2, canvas.height / 2 - 12);
+            ctx.fillText('滑動手指劃開塗層', canvas.width / 2, canvas.height / 2 - 12);
 
             ctx.fillStyle = '#78350f';
             ctx.font = '600 11px sans-serif';
@@ -529,7 +548,9 @@
             ctx.arc(x, y, 22, 0, Math.PI * 2);
             ctx.fill();
 
-            playScratchSound();
+            const xRatio = canvas.width > 0 ? x / canvas.width : 0.5;
+            playScratchSound(xRatio);
+
             if ("vibrate" in navigator && Math.random() > 0.6) {
                 navigator.vibrate(15);
             }
@@ -581,8 +602,15 @@
             // Reveal Course Block
             const courseBlock = document.getElementById('courseBlock');
             if (courseBlock) {
-                courseBlock.classList.remove('hidden', 'scale-95', 'opacity-0');
-                courseBlock.classList.add('scale-100', 'opacity-100');
+                courseBlock.classList.remove('opacity-0', 'scale-95', 'pointer-events-none');
+                courseBlock.classList.add('opacity-100', 'scale-100', 'pointer-events-auto');
+            }
+
+            // Reveal Youtube Block
+            const youtubeBlock = document.getElementById('youtubeBlock');
+            if (youtubeBlock) {
+                youtubeBlock.classList.remove('opacity-0', 'scale-95', 'pointer-events-none');
+                youtubeBlock.classList.add('opacity-100', 'scale-100', 'pointer-events-auto');
             }
 
             playVictoryChime();
@@ -633,11 +661,18 @@
             const cardCourseName = document.getElementById('cardCourseName');
             if (cardCourseName) cardCourseName.textContent = currentCard.courseName;
 
-            // Reset Course Block to hidden
+            // Reset Course Block to invisible state without layout shift
             const courseBlock = document.getElementById('courseBlock');
             if (courseBlock) {
-                courseBlock.classList.add('hidden', 'scale-95', 'opacity-0');
-                courseBlock.classList.remove('scale-100', 'opacity-100');
+                courseBlock.classList.add('opacity-0', 'scale-95', 'pointer-events-none');
+                courseBlock.classList.remove('opacity-100', 'scale-100', 'pointer-events-auto');
+            }
+
+            // Reset Youtube Block to invisible state without layout shift
+            const youtubeBlock = document.getElementById('youtubeBlock');
+            if (youtubeBlock) {
+                youtubeBlock.classList.add('opacity-0', 'scale-95', 'pointer-events-none');
+                youtubeBlock.classList.remove('opacity-100', 'scale-100', 'pointer-events-auto');
             }
 
             const cardContent = document.getElementById('cardRevealedContent');
