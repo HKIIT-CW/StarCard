@@ -108,6 +108,10 @@
         </div>
         
         <div class="flex items-center space-x-2">
+            <!-- Language Toggle Button (ZH / EN) -->
+            <button id="langToggleBtn" onclick="toggleLanguage()" class="h-9 px-3 rounded-xl bg-slate-900/80 border border-amber-500/30 text-amber-300 font-outfit font-bold text-xs flex items-center justify-center hover:bg-slate-800 transition active:scale-95 shadow-sm" title="Switch Language / 切換語言">
+                EN
+            </button>
             <button id="soundToggleBtn" onclick="toggleSound()" class="w-9 h-9 rounded-xl bg-slate-900/80 border border-amber-500/30 text-amber-300 flex items-center justify-center hover:bg-slate-800 transition active:scale-95 shadow-sm" title="聲音效果">
                 <i id="soundIcon" class="fa-solid fa-volume-high text-xs"></i>
             </button>
@@ -123,7 +127,7 @@
                 <i class="fa-solid fa-sparkles text-amber-400"></i>
                 <span>Special Souvenir at Chai Wan</span>
             </div>
-            <h1 class="text-2xl font-extrabold gold-gradient-text tracking-wide mb-1">
+            <h1 id="mainHeadline" class="text-2xl font-extrabold gold-gradient-text tracking-wide mb-1">
                 刮出今日幸運星光 ✦
             </h1>
         </div>
@@ -138,7 +142,7 @@
                 <div id="courseBlock" class="w-full bg-gradient-to-r from-amber-500/20 via-amber-400/30 to-amber-500/20 border border-amber-400/50 rounded-2xl p-2.5 shadow-md transform transition-all duration-500 opacity-0 scale-95 pointer-events-none">
                     <div class="text-[14px] text-amber-300 font-bold tracking-widest uppercase mb-0.5 flex items-center justify-center space-x-1">
                         <i class="fa-solid fa-graduation-cap text-amber-400"></i>
-                        <span>柴灣分校 專屬幸運配對課程</span>
+                        <span id="courseHeaderLabel">柴灣分校 專屬幸運配對課程</span>
                     </div>
                     <div id="cardCourseName" class="font-black text-[15px] text-amber-100 tracking-wide">
                         IT114107 Game Software Development
@@ -149,7 +153,7 @@
                 <div id="luckBlock" class="my-auto py-2 px-1 w-full">
                     <div class="text-[14px] text-amber-400 font-bold tracking-widest uppercase mb-1 flex items-center justify-center space-x-1">
                         <i class="fa-solid fa-certificate"></i>
-                        <span>今日幸運指數</span>
+                        <span id="luckIndexLabel">今日幸運指數</span>
                     </div>
                     
                     <!-- Stars container -->
@@ -168,7 +172,7 @@
                 <div id="youtubeBlock" class="w-full bg-gradient-to-br from-slate-900/90 to-slate-950/90 rounded-2xl p-3 border border-amber-500/30 flex flex-col items-center shadow-lg transform transition-all duration-500 opacity-0 scale-95 pointer-events-none">
                     <div class="flex items-center space-x-1.5 text-[10px] text-red-400 font-bold uppercase tracking-wider mb-1">
                         <i class="fa-brands fa-youtube text-xs"></i>
-                        <span>靈魂主題曲</span>
+                        <span id="soulSongLabel">靈魂主題曲</span>
                     </div>
                     <div id="cardSongTitle" class="font-bold text-sm text-slate-100 mb-0.5 line-clamp-1">
                         Beyond - 《海闊天空》
@@ -179,7 +183,7 @@
 
                     <a id="cardYoutubeBtn" href="https://www.youtube.com" target="_blank" rel="noopener noreferrer" onclick="openYoutubeLink(event, this.href)" class="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 text-white font-bold text-xs flex items-center justify-center space-x-2 transition active:scale-95 shadow-md shadow-red-600/30 relative z-30 cursor-pointer">
                         <i class="fa-solid fa-play text-xs"></i>
-                        <span>點擊進入 YouTube 播放</span>
+                        <span id="youtubeBtnLabel">點擊進入 YouTube 播放</span>
                     </a>
                 </div>
             </div>
@@ -198,11 +202,11 @@
         <div class="w-full max-w-xs flex space-x-3 mt-4">
             <button onclick="shareResult()" class="flex-1 py-3 px-4 rounded-2xl bg-slate-900/90 border border-amber-500/30 text-amber-300 font-bold text-xs flex items-center justify-center space-x-2 hover:bg-slate-800 active:scale-95 transition shadow-lg">
                 <i class="fa-solid fa-share-nodes"></i>
-                <span>分享今日幸運</span>
+                <span id="shareBtnLabel">分享今日幸運</span>
             </button>
             <button onclick="pickNewRandomCard()" class="flex-1 py-3 px-4 rounded-2xl bg-gradient-to-r from-amber-500 via-amber-400 to-amber-600 text-slate-950 font-extrabold text-xs flex items-center justify-center space-x-2 hover:brightness-110 active:scale-95 transition shadow-lg shadow-amber-500/20">
                 <i class="fa-solid fa-rotate-right"></i>
-                <span>換一張刮刮卡</span>
+                <span id="newCardBtnLabel">換一張刮刮卡</span>
             </button>
         </div>
 
@@ -227,9 +231,13 @@
                 stars: 5,
                 courseName: "IT114107 Game Software Development",
                 title: "【星光熠熠 • 極致幸運】",
+                title_en: "[Radiant Starlight • Ultimate Luck]",
                 quote: "氣場全開！今日幸運指數直衝雲宵，任何決策與嘗試皆有如神助，勇敢大膽衝刺吧！",
+                quote_en: "Full aura activated! Your luck index is sky-high today—every decision and attempt goes smoothly. Go bold and shine!",
                 songTitle: "Beyond - 《海闊天空》",
+                songTitle_en: "Beyond - Boundless Oceans, Vast Skies",
                 songDesc: "「原諒我這一生不羈放縱愛自由」",
+                songDesc_en: "\"Forgive me for loving freedom unrestrained all my life\"",
                 youtubeUrl: "https://www.youtube.com/results?search_query=Beyond+海闊天空+MV"
             },
             {
@@ -237,9 +245,13 @@
                 stars: 5,
                 courseName: "IT114122 Cybersecurity",
                 title: "【鴻運當頭 • 財感爆棚】",
+                title_en: "[Fortune Rising • Peak Prosperity]",
                 quote: "好運連連，驚喜不斷！今日特別容易獲得意想不到的禮物或貴人相助。",
+                quote_en: "Good luck and endless surprises! Today you are especially likely to receive unexpected gifts or helpful allies.",
                 songTitle: "陳奕迅 - 《幸福摩天輪》",
+                songTitle_en: "Eason Chan - Ferris Wheel of Happiness",
                 songDesc: "「追追趕趕高高低低，深呼吸然後與你執手相隨」",
+                songDesc_en: "\"Chasing up and down through highs and lows, take a deep breath and walk hand in hand\"",
                 youtubeUrl: "https://www.youtube.com/results?search_query=陳奕迅+幸福摩天輪+MV"
             },
             {
@@ -247,9 +259,13 @@
                 stars: 4,
                 courseName: "IT114124 AI & Smart Technology",
                 title: "【溫柔歲月 • 愜意自在】",
+                title_en: "[Gentle Moments • Peaceful Bliss]",
                 quote: "給心靈留一片溫暖淨土，享受身邊小小的幸福，愛與好運正在路上奔向你。",
+                quote_en: "Leave a warm sanctuary for your soul and savor the little joys around you—love and luck are on their way.",
                 songTitle: "Dear Jane - 《銀河修理員》",
+                songTitle_en: "Dear Jane - Galactic Repairman",
                 songDesc: "「祝你在亂流下平安，祝你在惡浪裏悠然」",
+                songDesc_en: "\"Wishing you peace amid turbulence, wishing you calm amid fierce waves\"",
                 youtubeUrl: "https://www.youtube.com/results?search_query=Dear+Jane+銀河修理員+MV"
             },
             {
@@ -257,9 +273,13 @@
                 stars: 4,
                 courseName: "IT114214 Digital Media Technology",
                 title: "【獨處靈感 • 思考突破】",
+                title_en: "[Solitary Spark • Mind Breakthrough]",
                 quote: "適合沉澱思緒的一天。在安靜中尋找獨特靈感，你會發現困惑許久的問題迎刃而解。",
+                quote_en: "A great day to settle your thoughts. Find unique inspiration in quiet moments, and lingering puzzles will solve themselves.",
                 songTitle: "林家謙 - 《一人之境》",
+                songTitle_en: "Terence Lam - Solitude",
                 songDesc: "「派對裏緊抱感觸跳舞，派對後獨自歸家亦好」",
+                songDesc_en: "\"Dancing with emotion at the party, yet heading home alone afterward feels just as good\"",
                 youtubeUrl: "https://www.youtube.com/results?search_query=林家謙+一人之境+MV"
             },
             {
@@ -267,9 +287,13 @@
                 stars: 5,
                 courseName: "IT114107 Game Software Development",
                 title: "【陽光破雲 • 萬事順意】",
+                title_en: "[Sunbeams Breaking Clouds • Smooth Sailing]",
                 quote: "心中若有陽光，無懼任何風雨！今日笑口常開，周遭的人都會被你的能量吸引。",
+                quote_en: "With sunshine in your heart, fear no storm! Keep smiling today—everyone around you will be drawn to your positive energy.",
                 songTitle: "周杰倫 - 《晴天》",
+                songTitle_en: "Jay Chou - Sunny Day",
                 songDesc: "「刮風這天試過握著妳手」",
+                songDesc_en: "\"On that windy day I tried holding your hand\"",
                 youtubeUrl: "https://www.youtube.com/results?search_query=周杰倫+晴天+MV"
             },
             {
@@ -277,9 +301,13 @@
                 stars: 5,
                 courseName: "IT114122 Cybersecurity",
                 title: "【青春記憶 • 靈感綻放】",
+                title_en: "[Youthful Memories • Blossoming Inspiration]",
                 quote: "回憶與靈感交織的一天，勇於嘗試新事物，必能碰撞出閃耀火花！",
+                quote_en: "A day where memories and inspiration intertwine—dare to try new things and spark brilliant ideas!",
                 songTitle: "張敬軒 - 《櫻花樹下》",
+                songTitle_en: "Hins Cheung - Under the Cherry Blossom Tree",
                 songDesc: "「如有天櫻花再開，願和你再聚」",
+                songDesc_en: "\"If one day the cherry blossoms bloom again, I wish to reunite with you\"",
                 youtubeUrl: "https://www.youtube.com/results?search_query=張敬軒+櫻花樹下+MV"
             },
             {
@@ -287,9 +315,13 @@
                 stars: 4,
                 courseName: "IT114124 AI & Smart Technology",
                 title: "【深層沉澱 • 重新出發】",
+                title_en: "[Deep Reflection • Fresh Start]",
                 quote: "整理好心情，放慢腳步。每一次停頓都是為了下一次更優雅地騰飛。",
+                quote_en: "Gather your thoughts and slow your pace. Every pause prepares you for an even more graceful leap forward.",
                 songTitle: "MC 張天賦 - 《記憶棉》",
+                songTitle_en: "MC Cheung - Memory Foam",
                 songDesc: "「下意識找尋你的背影」",
+                songDesc_en: "\"Subconsciously searching for your silhouette\"",
                 youtubeUrl: "https://www.youtube.com/results?search_query=MC+張天賦+記憶棉+MV"
             },
             {
@@ -297,9 +329,13 @@
                 stars: 5,
                 courseName: "IT114214 Digital Media Technology",
                 title: "【宇宙能量 • 突破界限】",
+                title_en: "[Cosmic Energy • Breaking Boundaries]",
                 quote: "無畏無懼！身上的熱情與潛能即將爆發，勇敢追尋心中的熱愛與夢想。",
+                quote_en: "Fearless and bold! Your passion and potential are about to ignite—bravely chase what you love and dream of.",
                 songTitle: "G.E.M. 鄧紫棋 - 《光年之外》",
+                songTitle_en: "G.E.M. - Light Years Away",
                 songDesc: "「感受停頓的時間，相擁在光年之外」",
+                songDesc_en: "\"Feeling time stand still, embracing light years away\"",
                 youtubeUrl: "https://www.youtube.com/results?search_query=鄧紫棋+光年之外+MV"
             },
             {
@@ -307,9 +343,13 @@
                 stars: 4,
                 courseName: "IT114107 Game Software Development",
                 title: "【邏輯清晰 • 心靈解毒】",
+                title_en: "[Crystal Logic • Mind Detox]",
                 quote: "頭腦格外清醒，理清思緒能讓你輕鬆破解生活中的迷思，重獲掌控感。",
+                quote_en: "Your mind is remarkably clear today—sorting through your thoughts lets you untangle daily puzzles and regain control.",
                 songTitle: "容祖兒 - 《心之科學》",
+                songTitle_en: "Joey Yung - Science of the Heart",
                 songDesc: "「聽說分手的傷痛痛過破骨」",
+                songDesc_en: "\"Understanding the heart with clarity brings strength to heal\"",
                 youtubeUrl: "https://www.youtube.com/results?search_query=容祖兒+心之科學+MV"
             },
             {
@@ -317,13 +357,65 @@
                 stars: 5,
                 courseName: "IT114122 Cybersecurity",
                 title: "【實力爆發 • 一擊即中】",
+                title_en: "[Peak Power • Bullseye Hit]",
                 quote: "積攢已久的力量今日迎來關鍵突破，展現自信，成果將超乎預期！",
+                quote_en: "The strength you have built reaches a breakthrough today—show your confidence and exceed every expectation!",
                 songTitle: "古巨基 - 《必殺技》",
+                songTitle_en: "Leo Ku - Signature Move",
                 songDesc: "「求你別要如從前純熟地碰我」",
+                songDesc_en: "\"Unleash your signature strength when the moment arrives\"",
                 youtubeUrl: "https://www.youtube.com/results?search_query=古巨基+必殺技+MV"
             }
         ];
 
+        const I18N = {
+            zh: {
+                pageTitle: "HKIIT 柴灣分校 ✦ VIP 幸運星光刮刮卡",
+                langBtnLabel: "EN",
+                soundBtnTitle: "聲音效果",
+                mainHeadline: "刮出今日幸運星光 ✦",
+                courseHeaderLabel: "柴灣分校 專屬幸運配對課程",
+                luckIndexLabel: "今日幸運指數",
+                soulSongLabel: "靈魂主題曲",
+                youtubeBtnLabel: "點擊進入 YouTube 播放",
+                canvasHeadline: "滑動手指劃開塗層",
+                promptStart: "用手指劃開塗層 (0%)",
+                promptProgress: (pct) => `已刮開 ${pct}%`,
+                shareBtnLabel: "分享今日幸運",
+                newCardBtnLabel: "換一張刮刮卡",
+                soundOnToast: "音效已開啟 🔊",
+                soundOffToast: "音效已靜音 🔇",
+                copySuccessToast: "結果已複製到剪貼簿！📋",
+                copyFailToast: "複製失敗，請手動複製",
+                shareTitle: "HKIIT VIP 幸運刮刮卡",
+                shareBody: (starsTxt, title, courseName, quote, songTitle, url) =>
+                    `✨ 我刮出了 VIP 幸運指數：[${starsTxt}]\n${title}\n🎓 配對柴灣 IT 課程：${courseName}\n\n「${quote}」\n\n🎵 今日專屬主題曲：${songTitle}\n👉 點擊收聽：${url}`
+            },
+            en: {
+                pageTitle: "HKIIT Chai Wan ✦ VIP Lucky Starlight Scratch Card",
+                langBtnLabel: "中",
+                soundBtnTitle: "Sound Effects",
+                mainHeadline: "Scratch Your Lucky Starlight ✦",
+                courseHeaderLabel: "Chai Wan Campus Matched Programme",
+                luckIndexLabel: "Today's Luck Index",
+                soulSongLabel: "Soul Theme Song",
+                youtubeBtnLabel: "Watch on YouTube",
+                canvasHeadline: "Swipe to Scratch Foil",
+                promptStart: "Swipe to scratch (0%)",
+                promptProgress: (pct) => `Scratched ${pct}%`,
+                shareBtnLabel: "Share Luck",
+                newCardBtnLabel: "New Card",
+                soundOnToast: "Sound On 🔊",
+                soundOffToast: "Sound Muted 🔇",
+                copySuccessToast: "Copied to clipboard! 📋",
+                copyFailToast: "Copy failed, please copy manually",
+                shareTitle: "HKIIT VIP Lucky Scratch Card",
+                shareBody: (starsTxt, title, courseName, quote, songTitle, url) =>
+                    `✨ I scratched a VIP Luck Index: [${starsTxt}]\n${title}\n🎓 Matched Chai Wan IT Programme: ${courseName}\n\n"${quote}"\n\n🎵 Today's Theme Song: ${songTitle}\n👉 Listen now: ${url}`
+            }
+        };
+
+        let currentLang = 'zh';
         let cardsPool = [...DEFAULT_CARDS];
         let currentCard = null;
         let isScratchedComplete = false;
@@ -338,8 +430,69 @@
         window.addEventListener('DOMContentLoaded', () => {
             initWebAudio();
             initCanvasScratch();
+            applyLanguageUI();
             pickNewRandomCard();
         });
+
+        function toggleLanguage() {
+            currentLang = currentLang === 'zh' ? 'en' : 'zh';
+            document.documentElement.lang = currentLang === 'zh' ? 'zh-HK' : 'en';
+            applyLanguageUI();
+            renderCurrentCardText();
+
+            if (!isScratchedComplete && scratchedPixelsPercentage === 0) {
+                drawGoldFoilOverlay();
+            }
+        }
+
+        function applyLanguageUI() {
+            const t = I18N[currentLang];
+            document.title = t.pageTitle;
+            document.getElementById('langToggleBtn').textContent = t.langBtnLabel;
+            document.getElementById('soundToggleBtn').title = t.soundBtnTitle;
+            document.getElementById('mainHeadline').textContent = t.mainHeadline;
+            document.getElementById('courseHeaderLabel').textContent = t.courseHeaderLabel;
+            document.getElementById('luckIndexLabel').textContent = t.luckIndexLabel;
+            document.getElementById('soulSongLabel').textContent = t.soulSongLabel;
+            document.getElementById('youtubeBtnLabel').textContent = t.youtubeBtnLabel;
+            document.getElementById('shareBtnLabel').textContent = t.shareBtnLabel;
+            document.getElementById('newCardBtnLabel').textContent = t.newCardBtnLabel;
+
+            const progressEl = document.getElementById('progressText');
+            if (progressEl) {
+                progressEl.textContent = scratchedPixelsPercentage === 0
+                    ? t.promptStart
+                    : t.promptProgress(Math.min(100, scratchedPixelsPercentage));
+            }
+        }
+
+        function renderCurrentCardText() {
+            if (!currentCard) return;
+            const isEn = currentLang === 'en';
+
+            const title = (isEn && currentCard.title_en) ? currentCard.title_en : currentCard.title;
+            const quote = (isEn && currentCard.quote_en) ? currentCard.quote_en : currentCard.quote;
+            const songTitle = (isEn && currentCard.songTitle_en) ? currentCard.songTitle_en : currentCard.songTitle;
+            const songDesc = (isEn && currentCard.songDesc_en) ? currentCard.songDesc_en : currentCard.songDesc;
+
+            const cardTitle = document.getElementById('cardTitle');
+            if (cardTitle) cardTitle.textContent = title;
+
+            const cardQuote = document.getElementById('cardQuote');
+            if (cardQuote) cardQuote.textContent = isEn ? `"${quote}"` : `「${quote}」`;
+
+            const cardSongTitle = document.getElementById('cardSongTitle');
+            if (cardSongTitle) cardSongTitle.textContent = songTitle;
+
+            const cardSongDesc = document.getElementById('cardSongDesc');
+            if (cardSongDesc) cardSongDesc.textContent = songDesc;
+
+            const cardYoutubeBtn = document.getElementById('cardYoutubeBtn');
+            if (cardYoutubeBtn) cardYoutubeBtn.href = currentCard.youtubeUrl;
+
+            const cardCourseName = document.getElementById('cardCourseName');
+            if (cardCourseName) cardCourseName.textContent = currentCard.courseName;
+        }
 
         function initWebAudio() {
             try {
@@ -432,12 +585,13 @@
         function toggleSound() {
             soundEnabled = !soundEnabled;
             const icon = document.getElementById('soundIcon');
+            const t = I18N[currentLang];
             if (soundEnabled) {
                 icon.className = "fa-solid fa-volume-high text-xs";
-                showToast("音效已開啟 🔊");
+                showToast(t.soundOnToast);
             } else {
                 icon.className = "fa-solid fa-volume-xmark text-xs text-slate-500";
-                showToast("音效已靜音 🔇");
+                showToast(t.soundOffToast);
             }
         }
 
@@ -499,10 +653,10 @@
 
             // Scratch overlay surface text
             ctx.fillStyle = '#451a03';
-            ctx.font = '900 16px "Noto Sans TC", sans-serif';
+            ctx.font = currentLang === 'en' ? '900 15px "Outfit", sans-serif' : '900 16px "Noto Sans TC", sans-serif';
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
-            ctx.fillText('滑動手指劃開塗層', canvas.width / 2, canvas.height / 2 - 12);
+            ctx.fillText(I18N[currentLang].canvasHeadline, canvas.width / 2, canvas.height / 2 - 12);
 
             ctx.fillStyle = '#78350f';
             ctx.font = '600 11px sans-serif';
@@ -578,7 +732,7 @@
 
             const progressEl = document.getElementById('progressText');
             if (progressEl) {
-                progressEl.textContent = `已刮開 ${Math.min(100, scratchedPixelsPercentage)}%`;
+                progressEl.textContent = I18N[currentLang].promptProgress(Math.min(100, scratchedPixelsPercentage));
             }
 
             // AUTO REVEAL threshold set to 15%
@@ -623,6 +777,7 @@
 
         function pickNewRandomCard() {
             isScratchedComplete = false;
+            scratchedPixelsPercentage = 0;
             
             if (canvas) {
                 canvas.classList.remove('pointer-events-none');
@@ -643,23 +798,7 @@
                 }
             }
 
-            const cardTitle = document.getElementById('cardTitle');
-            if (cardTitle) cardTitle.textContent = currentCard.title;
-
-            const cardQuote = document.getElementById('cardQuote');
-            if (cardQuote) cardQuote.textContent = `「${currentCard.quote}」`;
-
-            const cardSongTitle = document.getElementById('cardSongTitle');
-            if (cardSongTitle) cardSongTitle.textContent = currentCard.songTitle;
-
-            const cardSongDesc = document.getElementById('cardSongDesc');
-            if (cardSongDesc) cardSongDesc.textContent = currentCard.songDesc;
-
-            const cardYoutubeBtn = document.getElementById('cardYoutubeBtn');
-            if (cardYoutubeBtn) cardYoutubeBtn.href = currentCard.youtubeUrl;
-
-            const cardCourseName = document.getElementById('cardCourseName');
-            if (cardCourseName) cardCourseName.textContent = currentCard.courseName;
+            renderCurrentCardText();
 
             // Reset Course Block to invisible state without layout shift
             const courseBlock = document.getElementById('courseBlock');
@@ -682,7 +821,7 @@
             if (promptEl) promptEl.classList.remove('opacity-0', 'pointer-events-none');
 
             const progressEl = document.getElementById('progressText');
-            if (progressEl) progressEl.textContent = '用手指劃開塗層 (0%)';
+            if (progressEl) progressEl.textContent = I18N[currentLang].promptStart;
 
             drawGoldFoilOverlay();
         }
@@ -753,12 +892,18 @@
         function shareResult() {
             if (!currentCard) return;
 
+            const isEn = currentLang === 'en';
+            const t = I18N[currentLang];
+            const title = (isEn && currentCard.title_en) ? currentCard.title_en : currentCard.title;
+            const quote = (isEn && currentCard.quote_en) ? currentCard.quote_en : currentCard.quote;
+            const songTitle = (isEn && currentCard.songTitle_en) ? currentCard.songTitle_en : currentCard.songTitle;
+
             const starsTxt = "★".repeat(currentCard.stars) + "☆".repeat(5 - currentCard.stars);
-            const shareText = `✨ 我刮出了 VIP 幸運指數：[${starsTxt}]\n${currentCard.title}\n🎓 配對柴灣 IT 課程：${currentCard.courseName}\n\n「${currentCard.quote}」\n\n🎵 今日專屬主題曲：${currentCard.songTitle}\n👉 點擊收聽：${currentCard.youtubeUrl}`;
+            const shareText = t.shareBody(starsTxt, title, currentCard.courseName, quote, songTitle, currentCard.youtubeUrl);
 
             if (navigator.share) {
                 navigator.share({
-                    title: 'HKIIT VIP 幸運刮刮卡',
+                    title: t.shareTitle,
                     text: shareText,
                     url: window.location.href
                 }).catch(() => copyToClipboard(shareText));
@@ -768,6 +913,7 @@
         }
 
         function copyToClipboard(text) {
+            const t = I18N[currentLang];
             const textarea = document.createElement('textarea');
             textarea.value = text;
             textarea.style.position = 'fixed';
@@ -776,9 +922,9 @@
             textarea.select();
             try {
                 document.execCommand('copy');
-                showToast("結果已複製到剪貼簿！📋");
+                showToast(t.copySuccessToast);
             } catch (err) {
-                showToast("複製失敗，請手動複製");
+                showToast(t.copyFailToast);
             }
             document.body.removeChild(textarea);
         }
